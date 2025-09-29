@@ -1,0 +1,16 @@
+{
+  "domain": "tvt_nvr",
+  "name": "TVT NVR",
+  "version": "0.1.0",
+  "documentation": "https://github.com/toncompte/tvt_nvr",
+  "requirements": [],
+  "dependencies": [
+    "webhook"
+  ],
+  "codeowners": [
+    "@tonpseudo"
+  ],
+  "iot_class": "local_push",
+  "config_flow": true,
+  "logo": "custom_components/tvt_nvr/icon.png"
+}

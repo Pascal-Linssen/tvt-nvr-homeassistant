@@ -1,0 +1,18 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ajouter TVT NVR",
+        "description": "Renseigne l'IP, le port, l'utilisateur et le mot de passe",
+        "data": {
+          "ip": "Adresse IP du NVR",
+          "port": "Port",
+          "username": "Utilisateur",
+          "password": "Mot de passe",
+          "channels": "Nombre de canaux",
+          "use_push": "Activer le push (Alarm Server)"
+        }
+      }
+    }
+  }
+}

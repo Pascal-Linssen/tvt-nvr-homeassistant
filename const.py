@@ -1,0 +1,8 @@
+DOMAIN = "tvt_nvr"
+CONF_IP = "ip"
+CONF_USERNAME = "username"
+CONF_PASSWORD = "password"
+CONF_PORT = "port"
+CONF_CHANNELS = "channels"
+CONF_USE_PUSH = "use_push"
+WEBHOOK_ID = f"{DOMAIN}_alarm"

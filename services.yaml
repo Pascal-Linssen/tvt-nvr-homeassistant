@@ -1,0 +1,10 @@
+pulse_output:
+  name: Pulse Output
+  description: "Déclenche une impulsion sur une sortie relais du NVR"
+  fields:
+    output:
+      description: "Numéro de sortie"
+      example: 1
+    hold:
+      description: "Durée en secondes"
+      example: 1
