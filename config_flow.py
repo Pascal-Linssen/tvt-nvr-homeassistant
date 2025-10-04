@@ -1,6 +1,6 @@
 import voluptuous as vol
 from homeassistant import config_entries
-from .const import DOMAIN, CONF_IP, CONF_USERNAME, CONF_PASSWORD, CONF_PORT, CONF_CHANNELS, CONF_USE_PUSH
+from .const import DOMAIN, CONF_IP, CONF_USERNAME, CONF_PASSWORD, CONF_PORT, CONF_CHANNELS, CONF_USE_PUSH, CONF_ALARM_IN, CONF_ALARM_OUT
 
 class TVTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
@@ -15,6 +15,8 @@ class TVTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             vol.Required(CONF_PASSWORD): str,
             vol.Optional(CONF_PORT, default=80): int,
             vol.Optional(CONF_CHANNELS, default=16): int,
+            vol.Optional(CONF_ALARM_IN, default=4): int,
+            vol.Optional(CONF_ALARM_OUT, default=2): int,
             vol.Optional(CONF_USE_PUSH, default=True): bool,
         })
         return self.async_show_form(step_id="user", data_schema=schema)

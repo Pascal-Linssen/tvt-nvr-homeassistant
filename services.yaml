@@ -3,8 +3,16 @@ pulse_output:
   description: "Déclenche une impulsion sur une sortie relais du NVR"
   fields:
     output:
-      description: "Numéro de sortie"
+      description: "Numéro de sortie (1..N)"
       example: 1
     hold:
       description: "Durée en secondes"
       example: 1
+
+arm:
+  name: Arm
+  description: "Armer localement l'intégration TVT (les automatisations s'appliquent)."
+
+disarm:
+  name: Disarm
+  description: "Désarmer localement l'intégration TVT (les automatisations peuvent être ignorées)."

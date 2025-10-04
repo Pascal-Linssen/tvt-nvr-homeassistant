@@ -5,4 +5,8 @@ CONF_PASSWORD = "password"
 CONF_PORT = "port"
 CONF_CHANNELS = "channels"
 CONF_USE_PUSH = "use_push"
+CONF_ALARM_IN = "alarm_in"
+CONF_ALARM_OUT = "alarm_out"
 WEBHOOK_ID = f"{DOMAIN}_alarm"
+
+ATTR_ARMED = "armed"
