@@ -3,11 +3,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.const import Platform
 from homeassistant.components import webhook
-from homeassistant.components.webhook import WebhookResponse
-from aiohttp import web
-from aiohttp.web_exceptions import HTTPBadRequest
 from .const import DOMAIN, WEBHOOK_ID
 from .coordinator import TVTCoordinator
+from .raw_server import TVTRawServer
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH, Platform.ALARM_CONTROL_PANEL]
 _LOGGER = logging.getLogger(__name__)
@@ -16,19 +14,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     coordinator = TVTCoordinator(hass, entry)
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
-    # Webhook avec gestion améliorée pour les données XML du NVR
+    # Webhook standard
     hook_id = f"{WEBHOOK_ID}_{entry.entry_id}"
     
     async def _handle(hass, webhook_id, request):
-        """Handler webhook personnalisé pour gérer les requêtes malformées du NVR."""
+        """Handler webhook pour les notifications du NVR."""
         try:
             result = await coordinator.handle_push(request)
-            return WebhookResponse(text=result)
+            return result
         except Exception as e:
             _LOGGER.error("Webhook error: %s", e)
-            return WebhookResponse(text="ERROR", status=500)
+            return "ERROR"
     
     webhook.async_register(hass, DOMAIN, "TVT NVR Alarm", hook_id, _handle)
+
+    # Serveur TCP brut pour gérer les requêtes malformées (optionnel)
+    raw_server = TVTRawServer(coordinator, port=8124)
+    hass.data[DOMAIN][f"{entry.entry_id}_raw_server"] = raw_server
+    
+    try:
+        await raw_server.start()
+        _LOGGER.info("TVT Raw Server started on port 8124 for malformed requests")
+    except Exception as e:
+        _LOGGER.warning("Could not start TVT Raw Server: %s", e)
 
     # Services
     async def pulse_output(call):
@@ -49,7 +57,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    from homeassistant.components.webhook import async_unregister
+    # Arrêter le serveur TCP brut
+    raw_server = hass.data[DOMAIN].get(f"{entry.entry_id}_raw_server")
+    if raw_server:
+        await raw_server.stop()
+    
+    # Désinscrire le webhook
     hook_id = f"{WEBHOOK_ID}_{entry.entry_id}"
-    async_unregister(hass, hook_id)
+    webhook.async_unregister(hass, hook_id)
+    
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

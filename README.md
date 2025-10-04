@@ -1,6 +1,33 @@
 # 📖 IntégrFonctionnalités :  
 - **🔔 Contrôle d'alarme** - Panneau de contrô## 3. Installation
-1. **Téléchargez l'intégration** depuis GitHub ou HACS
+1. **Téléchargez l'intégr## 4. Configuration du NVR
+
+### 🔧 **Option 1: Webhook standard (recommandé)**
+Activez le **serveur d'alarme (Alarm Server)** dans :  
+```
+Settings → AI/Event → General Event Management → Alarm Event Notification
+```
+
+Paramètres à configurer :  
+- **Adresse IP** : celle de Home Assistant  
+- **Port** : 8123  
+- **Chemin** : `/api/webhook/tvt_nvr_alarm_[ID]` (affiché dans Home Assistant)
+
+### 🛠️ **Option 2: Serveur TCP brut (pour requêtes malformées)**
+Si vous rencontrez des erreurs `BadHttpMessage` répétées dans les logs, utilisez cette option :
+
+**Dans le NVR :**
+- **Adresse IP** : celle de Home Assistant  
+- **Port** : **8124** (au lieu de 8123)
+- **Chemin** : `/` ou laissez vide
+
+**Avantages :** 
+- ✅ Élimine les erreurs `aiohttp.http_exceptions.BadHttpMessage`
+- ✅ Traite les données XML malformées du NVR
+- ✅ Plus stable pour les NVR TVT anciens
+
+**Configuration du pare-feu :**
+Ouvrez le port 8124 sur votre serveur Home Assistant si nécessaire.puis GitHub ou HACS
 2. Dézippez le contenu dans :  
    ```
    config/custom_components/tvt_nvr/
@@ -32,9 +59,11 @@ aiohttp.http_exceptions.BadHttpMessage: 400, message: Data after `Connection: cl
 
 **Cause :** Le NVR TVT envoie des données XML non conformes aux standards HTTP.
 
-**Solution :** L'intégration gère automatiquement ces requêtes malformées depuis la v2.0. Les logs d'erreur peuvent être ignorés car les données sont correctement traitées.
+**Solutions :**
 
-**Pour réduire ces logs d'erreur**, ajoutez dans `configuration.yaml` :
+1. **Serveur TCP brut (Recommandé)** - Configurez le NVR pour utiliser le port **8124** au lieu de 8123. L'intégration démarre automatiquement un serveur TCP qui gère ces requêtes malformées.
+
+2. **Logs seulement** - Gardez le port 8123 et ajoutez cette configuration pour masquer les erreurs dans les logs :
 ```yaml
 logger:
   default: warning
@@ -43,13 +72,23 @@ logger:
     custom_components.tvt_nvr: debug
 ```
 
+**Port 8124 vs 8123 :**
+- **Port 8123** : Webhook standard Home Assistant (peut générer des erreurs BadHttpMessage)
+- **Port 8124** : Serveur TCP brut qui gère les données malformées proprement
+
 ### 📋 Configuration NVR recommandée
 
-Pour réduire les erreurs de communication :
-1. **Alarm Server Port** : Utilisez le port 8123 (port standard Home Assistant)
-2. **URL Webhook** : `/api/webhook/tvt_nvr_alarm_[ID]` (générée automatiquement)
+**Pour éviter les erreurs BadHttpMessage :**
+1. **Port recommandé** : Utilisez le port **8124** pour éviter les erreurs HTTP
+2. **URL alternative** : `http://[IP_HOME_ASSISTANT]:8124/` 
 3. **Intervalle d'envoi** : 30 secondes minimum pour éviter le spam
-4. **Format de données** : L'intégration accepte XML et JSON
+4. **Format de données** : L'intégration accepte XML et JSON sur les deux ports
+
+**Comparaison des ports :**
+| Port | Type | Avantages | Inconvénients |
+|------|------|-----------|---------------|
+| 8123 | Webhook HA | Standard, intégré | Erreurs BadHttpMessage |
+| 8124 | TCP brut | Pas d'erreurs, stable | Port supplémentaire |
 
 ### �️ Problème d'affichage de l'icône
 
