@@ -1,5 +1,16 @@
 # 📖 IntégrFonctionnalités :  
-- **🔔 Contrôle d'alarme** - Panneau de contrôle d'alarme intégré
+- **🔔 Contrôle d'alarme** - Panneau de contrô## 3. Installation
+1. **Téléchargez l'intégration** depuis GitHub ou HACS
+2. Dézippez le contenu dans :  
+   ```
+   config/custom_components/tvt_nvr/
+   ```
+3. **Redémarrez Home Assistant complètement** (pas seulement recharger)
+4. **Videz le cache du navigateur** (Ctrl+F5 ou Cmd+Shift+R)
+5. Ajoutez l'intégration via :  
+   **Paramètres → Appareils & services → Ajouter une intégration → TVT NVR**
+
+> 💡 **Note :** L'icône TVT peut prendre quelques minutes à apparaître après l'installation. Redémarrez Home Assistant si l'icône ne s'affiche pas.rme intégré
 - **🔌 Commande des sorties** - Pilotage des relais et sorties du NVR
 ## 9. Dépannage
 
@@ -39,6 +50,29 @@ Pour réduire les erreurs de communication :
 2. **URL Webhook** : `/api/webhook/tvt_nvr_alarm_[ID]` (générée automatiquement)
 3. **Intervalle d'envoi** : 30 secondes minimum pour éviter le spam
 4. **Format de données** : L'intégration accepte XML et JSON
+
+### �️ Problème d'affichage de l'icône
+
+**L'icône TVT ne s'affiche pas :**
+
+1. **Redémarrage complet** : Redémarrez Home Assistant complètement (pas juste recharger)
+2. **Cache navigateur** : Videz le cache de votre navigateur (Ctrl+F5)
+3. **Vérifiez le fichier** : Assurez-vous que `icon.jpg` existe dans `/config/custom_components/tvt_nvr/`
+4. **Format d'image** : Home Assistant préfère les fichiers PNG 256x256 pixels
+5. **Permissions** : Vérifiez que Home Assistant peut lire le fichier icône
+
+**Pour convertir l'icône en PNG (optionnel) :**
+```bash
+# Sur Linux/macOS avec ImageMagick
+convert icon.jpg -resize 256x256 icon.png
+
+# Ou utilisez un convertisseur en ligne
+```
+
+**Fichiers requis pour l'icône :**
+- `icon.jpg` (fourni) ou `icon.png` (recommandé)
+- Taille recommandée : 256x256 pixels
+- Format : PNG transparent ou JPG
 
 ### 📋 Log de débogage
 Activez les logs détaillés en ajoutant dans `configuration.yaml` :

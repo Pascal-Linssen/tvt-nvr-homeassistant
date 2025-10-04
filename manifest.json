@@ -1,15 +1,17 @@
 {
   "domain": "tvt_nvr",
   "name": "TVT NVR",
-  "version": "0.4.0",
-  "documentation": "https://github.com/toncompte/tvt_nvr",
+  "version": "1.0.0",
+  "documentation": "https://github.com/Pascal-Linssen/tvt-nvr-homeassistant",
+  "issue_tracker": "https://github.com/Pascal-Linssen/tvt-nvr-homeassistant/issues",
   "requirements": [],
   "dependencies": [
     "webhook"
   ],
   "codeowners": [
-    "@tonpseudo"
+    "@Néo32"
   ],
   "iot_class": "local_push",
-  "config_flow": true
+  "config_flow": true,
+  "integration_type": "device"
 }
