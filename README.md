@@ -2,12 +2,43 @@
 - **🔔 Contrôle d'alarme** - Panneau de contrôle d'alarme intégré
 - **🔌 Commande des sorties** - Pilotage des relais et sorties du NVR
 ## 9. Dépannage
+
+### 🔧 Problèmes courants
+
 1. **Alarm Server** : Vérifiez que l'Alarm Server est activé et que l'IP/port sont corrects.  
 2. **Connexion NVR** : Testez l'URL du NVR dans un navigateur avec vos identifiants.  
 3. **Capteurs bloqués** : Vérifiez la durée des alarmes si les capteurs restent en ON.  
 4. **Sorties non fonctionnelles** : Vérifiez la configuration des relais dans le NVR.
 5. **Entrées non détectées** : Contrôlez le câblage et la configuration des entrées.
 6. **Problèmes d'alarme** : Vérifiez le code d'accès et les permissions utilisateur.
+
+### ⚠️ Erreurs HTTP communes
+
+**Erreur "BadHttpMessage" dans les logs :**
+```
+aiohttp.http_exceptions.BadHttpMessage: 400, message: Data after `Connection: close`
+```
+
+**Cause :** Le NVR TVT envoie des données XML non conformes aux standards HTTP.
+
+**Solution :** L'intégration gère automatiquement ces requêtes malformées depuis la v2.0. Les logs d'erreur peuvent être ignorés car les données sont correctement traitées.
+
+**Pour réduire ces logs d'erreur**, ajoutez dans `configuration.yaml` :
+```yaml
+logger:
+  default: warning
+  logs:
+    aiohttp.server: error
+    custom_components.tvt_nvr: debug
+```
+
+### 📋 Configuration NVR recommandée
+
+Pour réduire les erreurs de communication :
+1. **Alarm Server Port** : Utilisez le port 8123 (port standard Home Assistant)
+2. **URL Webhook** : `/api/webhook/tvt_nvr_alarm_[ID]` (générée automatiquement)
+3. **Intervalle d'envoi** : 30 secondes minimum pour éviter le spam
+4. **Format de données** : L'intégration accepte XML et JSON
 
 ### 📋 Log de débogage
 Activez les logs détaillés en ajoutant dans `configuration.yaml` :

@@ -4,6 +4,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.const import Platform
 from homeassistant.components import webhook
 from homeassistant.components.webhook import WebhookResponse
+from aiohttp import web
+from aiohttp.web_exceptions import HTTPBadRequest
 from .const import DOMAIN, WEBHOOK_ID
 from .coordinator import TVTCoordinator
 
@@ -14,11 +16,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     coordinator = TVTCoordinator(hass, entry)
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
-    # Webhook
+    # Webhook avec gestion améliorée pour les données XML du NVR
     hook_id = f"{WEBHOOK_ID}_{entry.entry_id}"
+    
     async def _handle(hass, webhook_id, request):
-        await coordinator.handle_push(request)
-        return WebhookResponse(text="OK")
+        """Handler webhook personnalisé pour gérer les requêtes malformées du NVR."""
+        try:
+            result = await coordinator.handle_push(request)
+            return WebhookResponse(text=result)
+        except Exception as e:
+            _LOGGER.error("Webhook error: %s", e)
+            return WebhookResponse(text="ERROR", status=500)
+    
     webhook.async_register(hass, DOMAIN, "TVT NVR Alarm", hook_id, _handle)
 
     # Services

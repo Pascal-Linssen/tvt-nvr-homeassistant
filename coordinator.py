@@ -74,14 +74,98 @@ class TVTCoordinator(DataUpdateCoordinator):
 
     # ==== PUSH (webhook) ======================================================
     async def handle_push(self, request):
+        """Gère les notifications push du NVR TVT qui envoie du XML brut."""
         try:
+            # Le NVR TVT envoie du XML brut, pas du JSON
+            content_type = request.headers.get('content-type', '').lower()
+            
             if request.method == "POST":
-                payload = await request.json(content_type=None)
+                # Essayons d'abord de lire le contenu comme XML
+                raw_data = await request.read()
+                
+                # Nettoyage des données (suppression des caractères null à la fin)
+                if raw_data.endswith(b'\x00'):
+                    raw_data = raw_data.rstrip(b'\x00')
+                
+                try:
+                    text_data = raw_data.decode('utf-8')
+                    _LOGGER.debug("Received push data: %s", text_data[:500])
+                    
+                    # Tentative de parsing XML
+                    if text_data.strip().startswith('<?xml'):
+                        return await self._handle_xml_push(text_data)
+                    else:
+                        # Essayons JSON en fallback
+                        import json
+                        payload = json.loads(text_data)
+                        return await self._handle_json_push(payload)
+                        
+                except Exception as e:
+                    _LOGGER.warning("Failed to parse push data as XML or JSON: %s", e)
+                    # Essayons les query params
+                    payload = dict(request.query)
+                    return await self._handle_generic_push(payload)
             else:
+                # GET request avec query params
                 payload = dict(request.query)
-        except Exception:
-            payload = {"raw": await request.text()}
+                return await self._handle_generic_push(payload)
+                
+        except Exception as e:
+            _LOGGER.error("Error handling push notification: %s", e)
+            return "ERROR"
 
+    async def _handle_xml_push(self, xml_data: str):
+        """Traite les notifications XML du NVR."""
+        try:
+            root = ET.fromstring(xml_data)
+            
+            # Extraction des informations du XML
+            event_type = "status_update"
+            channel = 0
+            is_alarm = False
+            
+            # Chercher des informations d'alarme
+            alarm_offline = root.findtext(".//alarmServerOffLine")
+            if alarm_offline:
+                is_offline = _to_bool(alarm_offline)
+                event_type = "alarm_server_offline" if is_offline else "alarm_server_online"
+                
+            # Chercher des informations de device
+            device_name = root.findtext(".//DeviceName", "Unknown")
+            device_ip = root.findtext(".//ipAddress", "")
+            
+            # Fire l'événement
+            event_data = {
+                "event": event_type,
+                "channel": channel,
+                "on": is_alarm,
+                "armed": self.armed,
+                "device_name": device_name,
+                "device_ip": device_ip,
+                "xml_data": xml_data[:200]  # Premier bout du XML pour debug
+            }
+            
+            self.hass.bus.async_fire("tvt_nvr_event", event_data)
+            _LOGGER.debug("Processed XML push: %s", event_data)
+            
+            return "OK"
+            
+        except Exception as e:
+            _LOGGER.error("Error parsing XML push data: %s", e)
+            return "ERROR"
+
+    async def _handle_json_push(self, payload: dict):
+        """Traite les notifications JSON standards."""
+        e = str(payload.get("event") or payload.get("eventType") or payload.get("type") or "unknown").lower()
+        ch = int(payload.get("channel") or payload.get("ch") or payload.get("cam") or 0)
+        st = str(payload.get("state") or payload.get("status") or payload.get("action") or "start").lower()
+        on = st in ("start", "on", "true", "1", "alarm", "active", "begin")
+
+        self.hass.bus.async_fire("tvt_nvr_event", {"event": e, "channel": ch, "on": on, "armed": self.armed, "raw": payload})
+        return "OK"
+
+    async def _handle_generic_push(self, payload: dict):
+        """Traite les notifications génériques."""
         e = str(payload.get("event") or payload.get("eventType") or payload.get("type") or "unknown").lower()
         ch = int(payload.get("channel") or payload.get("ch") or payload.get("cam") or 0)
         st = str(payload.get("state") or payload.get("status") or payload.get("action") or "start").lower()
