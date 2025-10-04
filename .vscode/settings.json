@@ -1,0 +1,50 @@
+{
+    "python.analysis.extraPaths": [
+        "/usr/src/homeassistant",
+        "/usr/local/lib/python*/site-packages",
+        "./typings"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.stubPath": "typings",
+    "python.analysis.ignore": [
+        "**/homeassistant/**",
+        "**/site-packages/**"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none",
+        "reportMissingModuleSource": "none",
+        "reportGeneralTypeIssues": "none",
+        "reportUnknownParameterType": "none",
+        "reportUnknownArgumentType": "none",
+        "reportUnknownLambdaType": "none",
+        "reportUnknownVariableType": "none",
+        "reportUnknownMemberType": "none",
+        "reportMissingParameterType": "none",
+        "reportMissingTypeArgument": "none",
+        "reportInvalidTypeVarUse": "none",
+        "reportCallInDefaultInitializer": "none",
+        "reportUnnecessaryIsInstance": "none",
+        "reportUnnecessaryCast": "none",
+        "reportUnnecessaryComparison": "none",
+        "reportAssertAlwaysTrue": "none",
+        "reportConstantRedefinition": "none",
+        "reportIncompatibleMethodOverride": "none",
+        "reportIncompatibleVariableOverride": "none",
+        "reportInconsistentConstructor": "none"
+    },
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": false,
+    "files.associations": {
+        "*.py": "python"
+    },
+    "python.defaultInterpreterPath": "python3",
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=88"
+    ]
+}

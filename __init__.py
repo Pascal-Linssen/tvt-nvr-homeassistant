@@ -1,14 +1,15 @@
+"""TVT NVR Home Assistant Integration."""
 import logging
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.components import webhook
+from homeassistant.config_entries import ConfigEntry  # type: ignore
+from homeassistant.core import HomeAssistant  # type: ignore
+from homeassistant.components import webhook  # type: ignore
 from .const import DOMAIN, WEBHOOK_ID
 from .coordinator import TVTCoordinator
 from .raw_server import TVTRawServer
 
 # Import Platform avec fallback pour différentes versions de HA
 try:
-    from homeassistant.const import Platform
+    from homeassistant.const import Platform  # type: ignore
     PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH, Platform.ALARM_CONTROL_PANEL]
 except ImportError:
     # Fallback pour les versions plus anciennes ou nouvelles

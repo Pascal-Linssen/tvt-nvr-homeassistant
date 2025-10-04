@@ -1,10 +1,11 @@
+"""TVT NVR Data Update Coordinator."""
 import logging
 import base64
 from datetime import timedelta
 import xml.etree.ElementTree as ET
 
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator  # type: ignore
+from homeassistant.helpers.aiohttp_client import async_get_clientsession  # type: ignore
 
 from .const import DOMAIN, CONF_CHANNELS, CONF_ALARM_IN, CONF_ALARM_OUT, ATTR_ARMED
 

@@ -1,0 +1,61 @@
+[project]
+name = "tvt-nvr-homeassistant"
+version = "1.0.0"
+description = "TVT NVR integration for Home Assistant"
+authors = [
+    {name = "Pascal Linssen", email = "your.email@example.com"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+
+dependencies = [
+    "homeassistant>=2023.8.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/Pascal-Linssen/tvt-nvr-homeassistant"
+Repository = "https://github.com/Pascal-Linssen/tvt-nvr-homeassistant"
+Issues = "https://github.com/Pascal-Linssen/tvt-nvr-homeassistant/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503", "F401"]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "build",
+    "dist"
+]
