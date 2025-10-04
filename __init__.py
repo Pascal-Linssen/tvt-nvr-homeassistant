@@ -1,13 +1,19 @@
 import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.const import Platform
 from homeassistant.components import webhook
 from .const import DOMAIN, WEBHOOK_ID
 from .coordinator import TVTCoordinator
 from .raw_server import TVTRawServer
 
-PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH]  # Platform.ALARM_CONTROL_PANEL temporairement désactivé
+# Import Platform avec fallback pour différentes versions de HA
+try:
+    from homeassistant.const import Platform
+    PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH, Platform.ALARM_CONTROL_PANEL]
+except ImportError:
+    # Fallback pour les versions plus anciennes ou nouvelles
+    PLATFORMS = ["binary_sensor", "switch", "alarm_control_panel"]
+
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
