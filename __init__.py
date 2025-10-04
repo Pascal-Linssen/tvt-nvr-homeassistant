@@ -14,8 +14,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     coordinator = TVTCoordinator(hass, entry)
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
-    # Webhook standard
+    # Webhook standard avec ID unique
     hook_id = f"{WEBHOOK_ID}_{entry.entry_id}"
+    
+    # S'assurer que le webhook n'existe pas déjà
+    try:
+        webhook.async_unregister(hass, hook_id)
+        _LOGGER.debug("Cleaned up existing webhook: %s", hook_id)
+    except (ValueError, KeyError):
+        pass  # Le webhook n'existait pas, c'est normal
     
     async def _handle(hass, webhook_id, request):
         """Handler webhook pour les notifications du NVR."""
@@ -26,7 +33,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             _LOGGER.error("Webhook error: %s", e)
             return "ERROR"
     
+    # Enregistrer le webhook
     webhook.async_register(hass, DOMAIN, "TVT NVR Alarm", hook_id, _handle)
+    _LOGGER.info("Webhook registered: %s", hook_id)
 
     # Serveur TCP brut pour gérer les requêtes malformées (optionnel)
     raw_server = TVTRawServer(coordinator, port=8124)
@@ -62,8 +71,16 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     if raw_server:
         await raw_server.stop()
     
-    # Désinscrire le webhook
+    # Désinscrire le webhook (avec gestion d'erreur)
     hook_id = f"{WEBHOOK_ID}_{entry.entry_id}"
-    webhook.async_unregister(hass, hook_id)
+    try:
+        webhook.async_unregister(hass, hook_id)
+        _LOGGER.debug("Webhook unregistered successfully: %s", hook_id)
+    except ValueError as e:
+        _LOGGER.warning("Error unregistering webhook %s: %s", hook_id, e)
+    
+    # Nettoyer les données
+    if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
+        del hass.data[DOMAIN][entry.entry_id]
     
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
