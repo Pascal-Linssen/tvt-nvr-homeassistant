@@ -31,6 +31,11 @@ class TVTRawServer:
             )
             self._running = True
             _LOGGER.info("TVT Raw Server started on port %s", self.port)
+        except OSError as e:
+            if e.errno == 98:  # Address already in use
+                _LOGGER.warning("Port %s already in use, TVT Raw Server not started", self.port)
+            else:
+                _LOGGER.error("Failed to start TVT Raw Server: %s", e)
         except Exception as e:
             _LOGGER.error("Failed to start TVT Raw Server: %s", e)
     

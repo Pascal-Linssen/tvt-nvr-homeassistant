@@ -7,7 +7,7 @@ from .const import DOMAIN, WEBHOOK_ID
 from .coordinator import TVTCoordinator
 from .raw_server import TVTRawServer
 
-PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH, Platform.ALARM_CONTROL_PANEL]
+PLATFORMS = [Platform.BINARY_SENSOR, Platform.SWITCH]  # Platform.ALARM_CONTROL_PANEL temporairement désactivé
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -41,11 +41,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     raw_server = TVTRawServer(coordinator, port=8124)
     hass.data[DOMAIN][f"{entry.entry_id}_raw_server"] = raw_server
     
-    try:
-        await raw_server.start()
+    await raw_server.start()
+    if raw_server._running:
         _LOGGER.info("TVT Raw Server started on port 8124 for malformed requests")
-    except Exception as e:
-        _LOGGER.warning("Could not start TVT Raw Server: %s", e)
+    else:
+        _LOGGER.info("TVT Raw Server not started (port may be in use)")
 
     # Services
     async def pulse_output(call):

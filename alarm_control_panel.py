@@ -1,5 +1,16 @@
-from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity, AlarmControlPanelEntityFeature
+from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity
 from .const import DOMAIN
+
+# Import des features avec fallback pour différentes versions de HA
+try:
+    from homeassistant.components.alarm_control_panel import AlarmControlPanelEntityFeature
+    FEATURES_AVAILABLE = True
+except ImportError:
+    try:
+        from homeassistant.components.alarm_control_panel.const import AlarmControlPanelEntityFeature
+        FEATURES_AVAILABLE = True
+    except ImportError:
+        FEATURES_AVAILABLE = False
 
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
@@ -7,16 +18,31 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class TVTAlarmPanel(AlarmControlPanelEntity):
     _attr_should_poll = True
-    _attr_supported_features = (
-        AlarmControlPanelEntityFeature.ARM_HOME |
-        AlarmControlPanelEntityFeature.DISARM
-    )
-
+    
     def __init__(self, coordinator):
         self.coordinator = coordinator
         self._state = "armed_home" if coordinator.armed else "disarmed"
-        self._attr_name = "TVT NVR"
+        self._attr_name = "TVT NVR Alarm"
         self._attr_unique_id = "tvt_alarm_panel"
+        
+        # Support des fonctionnalités avec gestion des versions
+        if FEATURES_AVAILABLE:
+            try:
+                # Essayons d'abord les nouvelles constantes
+                features = 0
+                if hasattr(AlarmControlPanelEntityFeature, 'ARM_HOME'):
+                    features |= AlarmControlPanelEntityFeature.ARM_HOME
+                if hasattr(AlarmControlPanelEntityFeature, 'ARM_AWAY'):
+                    features |= AlarmControlPanelEntityFeature.ARM_AWAY
+                if hasattr(AlarmControlPanelEntityFeature, 'DISARM'):
+                    features |= AlarmControlPanelEntityFeature.DISARM
+                    
+                self._attr_supported_features = features
+            except Exception:
+                # Fallback sans features
+                self._attr_supported_features = 0
+        else:
+            self._attr_supported_features = 0
 
     @property
     def state(self):
