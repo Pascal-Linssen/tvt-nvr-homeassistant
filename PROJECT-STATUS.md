@@ -12,6 +12,44 @@ TVT NVR → SDK TVT Linux → MQTT → Home Assistant
 
 La voie SDK est la base active du projet. L'ancien poller HTTP/API et l'ancienne intégration webhook/TCP restent historiques et ne doivent pas servir de référence fonctionnelle actuelle.
 
+## Règles de travail du projet
+
+### Sauvegarde avant modification importante
+
+Avant toute modification importante touchant le LXC, le container, le SDK, les bibliothèques, le réseau, Docker ou la configuration système :
+
+1. créer un snapshot ou un backup du LXC Proxmox concerné ;
+2. noter la date, le nom du snapshot/backup et la raison dans le journal du projet ;
+3. conserver aussi un backup local du fichier applicatif modifié lorsque pertinent ;
+4. seulement ensuite effectuer la modification.
+
+Aucune grosse modification ne doit être engagée sans point de retour connu.
+
+### Travail multi-projets
+
+Le travail peut être interrompu et repris selon le temps disponible. Chaque projet doit donc conserver en permanence :
+
+- son état actuel ;
+- les fonctions réellement validées ;
+- les tests encore à faire ;
+- les bugs ouverts et leur diagnostic ;
+- les décisions techniques prises ;
+- la prochaine étape exacte ;
+- les sauvegardes/snapshots importants ;
+- les éléments nécessaires pour reprendre dans un nouveau chat sans réexpliquer l'historique.
+
+### Critère de clôture
+
+Un projet n'est considéré comme terminé que lorsque :
+
+- les fonctions prévues sont validées en situation réelle ;
+- les bugs bloquants sont résolus ou explicitement documentés comme limites acceptées ;
+- la documentation correspond à l'état réellement déployé ;
+- le code/configuration final est sauvegardé dans GitHub quand applicable ;
+- un backup/snapshot final ou une procédure de restauration existe ;
+- les anciennes pistes, fichiers et entités obsolètes sont nettoyés ou clairement archivés ;
+- le statut du projet passe explicitement à `CLÔTURÉ`.
+
 ## Infrastructure
 
 - NVR : `TD-3308H1-8P-B2-B`
