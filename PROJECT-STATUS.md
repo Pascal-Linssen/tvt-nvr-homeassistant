@@ -1,6 +1,6 @@
 # Projet TVT NVR → SDK → MQTT → Home Assistant — État d'avancement
 
-Dernière mise à jour : 2026-08-24
+Dernière mise à jour : 2026-08-25
 
 ## Objectif actif
 
@@ -140,6 +140,13 @@ Backup créé avant correction :
 - [x] Entité motion CH01 créée
 - [ ] Motion CH01 à revalider après correction du retour `OFF`
 - [ ] Nettoyage complet des anciennes entités / retained Discovery
+
+## TODO complémentaire
+
+- [ ] Étudier la gestion du **volume VLC** utilisé pour les annonces : niveau global, volume par type d'annonce, restauration du volume précédent après diffusion et comportement en cas de plusieurs annonces successives.
+- [ ] Ajouter un **mode Silence / Vacances** pour les annonces audio.
+- [ ] Prévoir des **horaires configurables** pour ce mode Silence / Vacances, avec règles distinctes si nécessaire selon les jours ou périodes.
+- [ ] Définir le comportement des annonces prioritaires pendant le mode Silence / Vacances : blocage total, volume réduit ou exceptions pour les alertes critiques.
 
 ## Prochaine étape prioritaire
 
