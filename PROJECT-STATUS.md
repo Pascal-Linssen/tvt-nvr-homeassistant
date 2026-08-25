@@ -146,6 +146,11 @@ Backup créé avant correction :
 ### P0 — À finir avant de disperser le projet
 
 - [ ] Revalider physiquement le cycle `motion/ch01 ON → OFF` après correction.
+- [ ] Ajouter les **flux vidéo utiles à l'interface alarme Home Assistant** afin d'avoir un accès direct aux caméras liées aux zones de sécurité.
+- [ ] Définir le mapping `zone/capteur d'alarme → caméra pertinente` pour afficher immédiatement la bonne vue lors d'un événement.
+- [ ] En **mode Absence**, tester l'envoi automatique d'un **snapshot de la caméra concernée** lors d'une détection pertinente, en complément de la notification d'alarme.
+- [ ] Prévoir anti-spam / temporisation pour éviter une rafale de captures lors d'un même événement et vérifier le délai réel entre détection, capture et réception sur le mobile.
+- [ ] Définir le comportement de repli si le snapshot échoue : conserver au minimum la notification texte et un lien/accès rapide au flux vidéo.
 - [ ] Nettoyer les anciennes entités Home Assistant et les retained MQTT Discovery obsolètes.
 - [ ] Stabiliser et documenter complètement le bridge `TVT NVR → SDK → MQTT → Home Assistant` avant généralisation aux autres caméras.
 
@@ -197,20 +202,20 @@ Backup créé avant correction :
 
 ## Prochaine étape prioritaire
 
-Tester physiquement :
+Ordre de travail immédiat :
 
-```text
-tvt/nvr1/motion/ch01 ON
-tvt/nvr1/motion/ch01 OFF
-```
+1. Revalider physiquement `tvt/nvr1/motion/ch01 ON → OFF`.
+2. Ajouter les flux vidéo nécessaires dans l'interface alarme.
+3. Associer chaque zone/capteur critique à la caméra correspondante.
+4. Tester en mode **Absence** l'envoi d'une notification avec snapshot sur une détection réelle, avec anti-spam et solution de repli si la capture échoue.
 
-Commande de test :
+Commande de test motion :
 
 ```bash
 mosquitto_sub -R -h 192.168.1.20 -u tvt2mqtt -P '<secret>' -t 'tvt/nvr1/motion/ch01' -v
 ```
 
-Ne pas généraliser aux autres caméras avant validation de ce cycle.
+Le manuel NVR confirme que les alarmes peuvent déclencher une capture automatique via la fonction `Snapshot`; cette capacité pourra servir de référence lors du choix de la méthode de capture, même si l'intégration Home Assistant/Node-RED devra être validée séparément.
 
 ## Références
 
