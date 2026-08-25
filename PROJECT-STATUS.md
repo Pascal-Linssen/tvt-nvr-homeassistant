@@ -165,6 +165,9 @@ Backup créé avant correction :
 - [ ] Prévoir un **mode conversation par session** : un appui unique sur un bouton/raccourci mobile ouvre la conversation, puis le mobile continue d'écouter automatiquement pendant une durée ou une période d'inactivité configurable sans nouvel appui entre chaque échange.
 - [ ] Prévoir une temporisation configurable de fin de session, remise à zéro après chaque interaction, avec arrêt manuel immédiat possible et indication claire lorsque l'écoute est active.
 - [ ] Étudier la possibilité de prolonger automatiquement la session tant qu'un échange est en cours, puis de revenir à l'état inactif après le délai défini pour limiter la consommation batterie et les risques d'écoute permanente.
+- [ ] Étudier un **mode conversation initiée par Jarvis** : Home Assistant/Node-RED peut poser spontanément une question sur le mobile, diffuser la question en TTS, puis ouvrir automatiquement une fenêtre d'écoute pour attendre la réponse sans interaction tactile.
+- [ ] Préserver le **contexte de la question** pendant cette session afin d'interpréter des réponses courtes (`oui`, `non`, `ce soir`, `dans 30 minutes`, etc.) et d'enchaîner éventuellement plusieurs échanges.
+- [ ] Prévoir un délai de réponse configurable, une action de repli si aucune réponse n'est reçue, des niveaux de priorité et le respect du mode Silence / Vacances pour éviter les sollicitations inutiles.
 
 ## Prochaine étape prioritaire
 
