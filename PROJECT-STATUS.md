@@ -157,6 +157,11 @@ Backup créé avant correction :
 - [ ] Ajouter un **rappel automatique** tant qu'une batterie reste sous le seuil et qu'aucun remplacement/rechargement n'a été constaté, avec fréquence configurable et anti-spam.
 - [ ] Prévoir l'acquittement temporaire d'une alerte batterie et la remise à zéro automatique du rappel dès que la batterie repasse au-dessus du seuil défini.
 - [ ] Produire un résumé exploitable dans Home Assistant/Node-RED : équipements concernés, niveau de batterie, durée sous seuil et dernière notification envoyée.
+- [ ] Étudier une **interface vocale mobile globale** permettant d'interroger Home Assistant avec un mot d'activation de type `Jarvis`, indépendamment du seul projet NVR.
+- [ ] Évaluer le chemin complet `mot d'activation → capture vocale → reconnaissance vocale → Assist/Home Assistant → réponse → TTS sur le mobile`, avec priorité à une solution utilisable écran verrouillé si la plateforme mobile le permet.
+- [ ] Prévoir que cette interface puisse servir à la fois aux **questions d'état** (`Jarvis, la porte de l'atelier est-elle fermée ?`), aux **commandes** (`éteins le garage`) et au lancement de scénarios/flows Node-RED.
+- [ ] Étudier le fonctionnement local et distant, les permissions Android, la consommation batterie du wake word permanent, la confidentialité, ainsi qu'un mode de secours par bouton/raccourci si l'écoute permanente n'est pas fiable.
+- [ ] Garder le mot d'activation et le moteur vocal **paramétrables**, afin de ne pas figer l'architecture sur le nom `Jarvis` ni sur un moteur STT/TTS particulier.
 
 ## Prochaine étape prioritaire
 
