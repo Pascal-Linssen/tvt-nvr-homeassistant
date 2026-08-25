@@ -146,6 +146,8 @@ Backup créé avant correction :
 - [ ] Étudier la gestion du **volume VLC** utilisé pour les annonces : niveau global, volume par type d'annonce, restauration du volume précédent après diffusion et comportement en cas de plusieurs annonces successives.
 - [ ] Ajouter un **mode Silence / Vacances** pour les annonces audio.
 - [ ] Prévoir des **horaires configurables** pour ce mode Silence / Vacances, avec règles distinctes si nécessaire selon les jours ou périodes.
+- [ ] Étudier un fonctionnement dynamique basé sur le **prochain réveil du téléphone** remonté dans Home Assistant : par exemple maintenir le mode Silence jusqu'à une heure configurable avant/après le réveil, avec repli sur les horaires fixes si l'information du mobile est absente ou obsolète.
+- [ ] Prévoir l'activation/désactivation de cette logique liée au réveil mobile et le choix du téléphone de référence.
 - [ ] Définir le comportement des annonces prioritaires pendant le mode Silence / Vacances : blocage total, volume réduit ou exceptions pour les alertes critiques.
 
 ## Prochaine étape prioritaire
