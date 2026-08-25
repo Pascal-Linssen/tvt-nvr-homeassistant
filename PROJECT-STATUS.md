@@ -152,6 +152,11 @@ Backup créé avant correction :
 - [ ] Utiliser ensuite ce système global comme source optionnelle pour le mode Silence / Vacances des annonces.
 - [ ] Prévoir l'activation/désactivation de cette logique liée au réveil mobile et le choix du téléphone de référence.
 - [ ] Définir le comportement des annonces prioritaires pendant le mode Silence / Vacances : blocage total, volume réduit ou exceptions pour les alertes critiques.
+- [ ] Ajouter un **flow Node-RED global de surveillance des batteries** pour les équipements remontés dans Home Assistant.
+- [ ] Prévoir des seuils de batterie configurables (alerte basse, critique et éventuellement seuil spécifique par équipement) ainsi que la gestion des capteurs indisponibles ou dont la valeur n'est plus mise à jour.
+- [ ] Ajouter un **rappel automatique** tant qu'une batterie reste sous le seuil et qu'aucun remplacement/rechargement n'a été constaté, avec fréquence configurable et anti-spam.
+- [ ] Prévoir l'acquittement temporaire d'une alerte batterie et la remise à zéro automatique du rappel dès que la batterie repasse au-dessus du seuil défini.
+- [ ] Produire un résumé exploitable dans Home Assistant/Node-RED : équipements concernés, niveau de batterie, durée sous seuil et dernière notification envoyée.
 
 ## Prochaine étape prioritaire
 
