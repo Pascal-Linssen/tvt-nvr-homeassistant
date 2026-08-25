@@ -141,33 +141,59 @@ Backup créé avant correction :
 - [ ] Motion CH01 à revalider après correction du retour `OFF`
 - [ ] Nettoyage complet des anciennes entités / retained Discovery
 
-## TODO complémentaire
+## Backlog priorisé
 
-- [ ] Étudier la gestion du **volume VLC** utilisé pour les annonces : niveau global, volume par type d'annonce, restauration du volume précédent après diffusion et comportement en cas de plusieurs annonces successives.
-- [ ] Ajouter un **mode Silence / Vacances** pour les annonces audio.
-- [ ] Prévoir des **horaires configurables** pour ce mode Silence / Vacances, avec règles distinctes si nécessaire selon les jours ou périodes.
-- [ ] Concevoir un **système global de réveil mobile** dans Home Assistant, indépendant du seul projet NVR/annonces et réutilisable par d'autres automatisations.
-- [ ] Exposer au minimum : prochain réveil connu, téléphone source, validité/fraîcheur de l'information, état `réveil_programmé`, et décalages configurables avant/après réveil.
-- [ ] Prévoir une logique de repli configurable si aucune information de réveil valide n'est disponible.
-- [ ] Utiliser ensuite ce système global comme source optionnelle pour le mode Silence / Vacances des annonces.
-- [ ] Prévoir l'activation/désactivation de cette logique liée au réveil mobile et le choix du téléphone de référence.
-- [ ] Définir le comportement des annonces prioritaires pendant le mode Silence / Vacances : blocage total, volume réduit ou exceptions pour les alertes critiques.
+### P0 — À finir avant de disperser le projet
+
+- [ ] Revalider physiquement le cycle `motion/ch01 ON → OFF` après correction.
+- [ ] Nettoyer les anciennes entités Home Assistant et les retained MQTT Discovery obsolètes.
+- [ ] Stabiliser et documenter complètement le bridge `TVT NVR → SDK → MQTT → Home Assistant` avant généralisation aux autres caméras.
+
+### P1 — Fonctions utiles à court terme
+
+#### Annonces audio
+
+- [ ] Étudier la gestion du **volume VLC** : niveau global, volume par type d'annonce, restauration du volume précédent après diffusion et gestion de plusieurs annonces successives.
+- [ ] Ajouter un **mode Silence / Vacances**.
+- [ ] Rendre les horaires de ce mode **entièrement configurables**.
+- [ ] Définir le comportement des annonces prioritaires pendant le mode Silence / Vacances : blocage, volume réduit ou exception pour les alertes critiques.
+
+#### Surveillance batteries
+
 - [ ] Ajouter un **flow Node-RED global de surveillance des batteries** pour les équipements remontés dans Home Assistant.
-- [ ] Prévoir des seuils de batterie configurables (alerte basse, critique et éventuellement seuil spécifique par équipement) ainsi que la gestion des capteurs indisponibles ou dont la valeur n'est plus mise à jour.
-- [ ] Ajouter un **rappel automatique** tant qu'une batterie reste sous le seuil et qu'aucun remplacement/rechargement n'a été constaté, avec fréquence configurable et anti-spam.
-- [ ] Prévoir l'acquittement temporaire d'une alerte batterie et la remise à zéro automatique du rappel dès que la batterie repasse au-dessus du seuil défini.
-- [ ] Produire un résumé exploitable dans Home Assistant/Node-RED : équipements concernés, niveau de batterie, durée sous seuil et dernière notification envoyée.
-- [ ] Étudier une **interface vocale mobile globale** permettant d'interroger Home Assistant avec un mot d'activation de type `Jarvis`, indépendamment du seul projet NVR.
-- [ ] Évaluer le chemin complet `mot d'activation → capture vocale → reconnaissance vocale → Assist/Home Assistant → réponse → TTS sur le mobile`, avec priorité à une solution utilisable écran verrouillé si la plateforme mobile le permet.
-- [ ] Prévoir que cette interface puisse servir à la fois aux **questions d'état** (`Jarvis, la porte de l'atelier est-elle fermée ?`), aux **commandes** (`éteins le garage`) et au lancement de scénarios/flows Node-RED.
-- [ ] Étudier le fonctionnement local et distant, les permissions Android, la consommation batterie du wake word permanent, la confidentialité, ainsi qu'un mode de secours par bouton/raccourci si l'écoute permanente n'est pas fiable.
-- [ ] Garder le mot d'activation et le moteur vocal **paramétrables**, afin de ne pas figer l'architecture sur le nom `Jarvis` ni sur un moteur STT/TTS particulier.
-- [ ] Prévoir un **mode conversation par session** : un appui unique sur un bouton/raccourci mobile ouvre la conversation, puis le mobile continue d'écouter automatiquement pendant une durée ou une période d'inactivité configurable sans nouvel appui entre chaque échange.
-- [ ] Prévoir une temporisation configurable de fin de session, remise à zéro après chaque interaction, avec arrêt manuel immédiat possible et indication claire lorsque l'écoute est active.
-- [ ] Étudier la possibilité de prolonger automatiquement la session tant qu'un échange est en cours, puis de revenir à l'état inactif après le délai défini pour limiter la consommation batterie et les risques d'écoute permanente.
-- [ ] Étudier un **mode conversation initiée par Jarvis** : Home Assistant/Node-RED peut poser spontanément une question sur le mobile, diffuser la question en TTS, puis ouvrir automatiquement une fenêtre d'écoute pour attendre la réponse sans interaction tactile.
-- [ ] Préserver le **contexte de la question** pendant cette session afin d'interpréter des réponses courtes (`oui`, `non`, `ce soir`, `dans 30 minutes`, etc.) et d'enchaîner éventuellement plusieurs échanges.
-- [ ] Prévoir un délai de réponse configurable, une action de repli si aucune réponse n'est reçue, des niveaux de priorité et le respect du mode Silence / Vacances pour éviter les sollicitations inutiles.
+- [ ] Prévoir des seuils configurables : batterie basse, critique et éventuellement seuil spécifique par équipement.
+- [ ] Gérer les capteurs indisponibles ou dont la valeur ne se met plus à jour.
+- [ ] Ajouter un **rappel automatique** tant qu'une batterie reste sous le seuil, avec fréquence configurable et anti-spam.
+- [ ] Prévoir un acquittement temporaire et une remise à zéro automatique lorsque la batterie repasse au-dessus du seuil.
+- [ ] Produire un résumé exploitable dans Home Assistant/Node-RED : équipement, niveau, durée sous seuil et dernière notification.
+
+### P2 — Briques globales Home Assistant
+
+#### Réveil mobile global
+
+- [ ] Concevoir un **système global de réveil mobile** indépendant du projet NVR/annonces et réutilisable par d'autres automatisations.
+- [ ] Exposer au minimum : prochain réveil connu, téléphone source, validité/fraîcheur, état `réveil_programmé` et offsets configurables avant/après réveil.
+- [ ] Prévoir une logique de repli configurable si aucune information de réveil valide n'est disponible.
+- [ ] Permettre le choix du téléphone de référence et l'activation/désactivation de cette logique.
+- [ ] Utiliser ensuite ce système comme source optionnelle pour le mode Silence / Vacances, mais aussi pour d'autres automatisations futures.
+
+#### Interface vocale mobile / Jarvis
+
+- [ ] Étudier une **interface vocale mobile globale** permettant d'interroger Home Assistant avec un mot d'activation de type `Jarvis`.
+- [ ] Évaluer le chemin complet `activation → capture vocale → STT → Assist/Home Assistant → réponse → TTS mobile`.
+- [ ] Prévoir les questions d'état, les commandes et le lancement de scénarios/flows Node-RED.
+- [ ] Étudier le fonctionnement local/distant, écran verrouillé, permissions Android, consommation batterie et confidentialité.
+- [ ] Garder le mot d'activation et les moteurs STT/TTS **paramétrables**.
+- [ ] Prévoir un **mode conversation par session** : un seul appui sur un bouton/raccourci ouvre la conversation, puis le mobile continue d'écouter automatiquement pendant une durée configurable.
+- [ ] Prévoir une temporisation de fin de session remise à zéro après chaque interaction, avec arrêt manuel immédiat et indication claire de l'écoute active.
+
+### P3 — Jarvis proactif / fonctions avancées
+
+- [ ] Étudier un **mode conversation initiée par Jarvis** : Home Assistant/Node-RED peut poser spontanément une question sur le mobile, diffuser la question en TTS puis ouvrir une fenêtre d'écoute sans interaction tactile.
+- [ ] Préserver le **contexte de la question** pour interpréter des réponses courtes (`oui`, `non`, `ce soir`, `dans 30 minutes`, etc.).
+- [ ] Prévoir un délai de réponse configurable et une action de repli si aucune réponse n'est reçue.
+- [ ] Ajouter des niveaux de priorité et respecter le mode Silence / Vacances pour éviter les sollicitations inutiles.
+- [ ] Étudier une éventuelle activation par wake word permanent uniquement si le fonctionnement Android et la consommation sont jugés acceptables ; conserver le bouton/raccourci comme solution fiable de base.
 
 ## Prochaine étape prioritaire
 
