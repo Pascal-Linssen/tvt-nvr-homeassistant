@@ -162,6 +162,9 @@ Backup créé avant correction :
 - [ ] Prévoir que cette interface puisse servir à la fois aux **questions d'état** (`Jarvis, la porte de l'atelier est-elle fermée ?`), aux **commandes** (`éteins le garage`) et au lancement de scénarios/flows Node-RED.
 - [ ] Étudier le fonctionnement local et distant, les permissions Android, la consommation batterie du wake word permanent, la confidentialité, ainsi qu'un mode de secours par bouton/raccourci si l'écoute permanente n'est pas fiable.
 - [ ] Garder le mot d'activation et le moteur vocal **paramétrables**, afin de ne pas figer l'architecture sur le nom `Jarvis` ni sur un moteur STT/TTS particulier.
+- [ ] Prévoir un **mode conversation par session** : un appui unique sur un bouton/raccourci mobile ouvre la conversation, puis le mobile continue d'écouter automatiquement pendant une durée ou une période d'inactivité configurable sans nouvel appui entre chaque échange.
+- [ ] Prévoir une temporisation configurable de fin de session, remise à zéro après chaque interaction, avec arrêt manuel immédiat possible et indication claire lorsque l'écoute est active.
+- [ ] Étudier la possibilité de prolonger automatiquement la session tant qu'un échange est en cours, puis de revenir à l'état inactif après le délai défini pour limiter la consommation batterie et les risques d'écoute permanente.
 
 ## Prochaine étape prioritaire
 
